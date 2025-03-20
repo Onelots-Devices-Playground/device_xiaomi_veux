@@ -18,6 +18,12 @@ $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 TARGET_SCREEN_HEIGHT := 2400
 TARGET_SCREEN_WIDTH := 1080
 
+# BCR
+BUILD_BCR := true
+
+# Accord
+TARGET_INCLUDE_ACCORD := true
+
 PRODUCT_BRAND := Redmi
 PRODUCT_DEVICE := veux
 PRODUCT_MANUFACTURER := Xiaomi
