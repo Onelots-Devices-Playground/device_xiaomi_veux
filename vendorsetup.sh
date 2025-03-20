@@ -14,10 +14,6 @@ echo "Cloning Kernel"
 # Kernel
 git clone --depth=1 https://github.com/PaimonLab/kernel_xiaomi_veux.git kernel/xiaomi/veux
 
-echo "Cloning BCR..."
-# BCR
-git clone --depth=1 https://github.com/MrTopia/vendor_bcr vendor/bcr
-
 echo cloning AGC camera
 git clone --depth=1 https://gitlab.com/takixamru/vendor_xiaomi_agc-camera.git vendor/xiaomi/AGC-camera 
 
