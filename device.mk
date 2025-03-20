@@ -93,6 +93,9 @@ PRODUCT_COPY_FILES += \
 # BCR
 BUILD_BCR := true
 
+# Accord
+TARGET_INCLUDE_ACCORD := true
+
 # Bluetooth
 PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.1.vendor \
