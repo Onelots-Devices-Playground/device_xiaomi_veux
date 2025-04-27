@@ -56,6 +56,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     audio.bluetooth.default \
+    audio_amplifier.holi \
     audio.primary.default \
     audio.primary.holi \
     audio.r_submix.default \
