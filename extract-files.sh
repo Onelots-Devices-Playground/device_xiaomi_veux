@@ -28,22 +28,14 @@ source "${HELPER}"
 # Default to sanitizing the vendor folder before extraction
 CLEAN_VENDOR=true
 
-ONLY_COMMON=
 ONLY_FIRMWARE=
-ONLY_TARGET=
 KANG=
 SECTION=
 
 while [ "${#}" -gt 0 ]; do
     case "${1}" in
-        --only-common)
-            ONLY_COMMON=true
-            ;;
         --only-firmware)
             ONLY_FIRMWARE=true
-            ;;
-        --only-target)
-            ONLY_TARGET=true
             ;;
         -n | --no-cleanup)
             CLEAN_VENDOR=false
@@ -78,9 +70,19 @@ function blob_fixup() {
             [ "$2" = "" ] && return 0
             sed -i "/^service/! s/wfdservice$/wfdservice64/g" "${2}"
             ;;
+        system_ext/lib64/libwfdmmsrc_system.so)
+            [ "$2" = "" ] && return 0
+            grep -q "libgui_shim.so" "${2}" || "${PATCHELF}" --add-needed "libgui_shim.so" "${2}"
+            ;;
         system_ext/lib64/libwfdnative.so)
             [ "$2" = "" ] && return 0
             "${PATCHELF}" --remove-needed "android.hidl.base@1.0.so" "${2}"
+            grep -q "libbinder_shim.so" "${2}" || "${PATCHELF}" --add-needed "libbinder_shim.so" "${2}"
+            grep -q "libinput_shim.so" "${2}" || "${PATCHELF}" --add-needed "libinput_shim.so" "${2}"
+            ;;
+        system_ext/lib64/libwfdservice.so)
+            [ "$2" = "" ] && return 0
+            "${PATCHELF}" --replace-needed "android.media.audio.common.types-V2-cpp.so" "android.media.audio.common.types-V4-cpp.so" "${2}"
             ;;
         vendor/etc/camera/camxoverridesettings.txt)
             [ "$2" = "" ] && return 0
@@ -104,16 +106,21 @@ function blob_fixup() {
             llvm-strip --strip-debug "${2}"
             grep -q "libpiex_shim.so" "${2}" || "${PATCHELF}" --add-needed "libpiex_shim.so" "${2}"
             ;;
+        vendor/lib64/libalLDC.so|vendor/lib64/libalhLDC.so)
+            [ "$2" = "" ] && return 0
+            "${PATCHELF}" --clear-symbol-version "AHardwareBuffer_allocate" "${2}"
+            "${PATCHELF}" --clear-symbol-version "AHardwareBuffer_describe" "${2}"
+            "${PATCHELF}" --clear-symbol-version "AHardwareBuffer_lock" "${2}"
+            "${PATCHELF}" --clear-symbol-version "AHardwareBuffer_release" "${2}"
+            "${PATCHELF}" --clear-symbol-version "AHardwareBuffer_unlock" "${2}"
+            ;;
+        vendor/lib64/libgoodixhwfingerprint.so)
+            [ "$2" = "" ] && return 0
+            "${PATCHELF}" --replace-needed "libvendor.goodix.hardware.biometrics.fingerprint@2.1.so" "vendor.goodix.hardware.biometrics.fingerprint@2.1.so" "${2}"
+            ;;
         vendor/lib64/libwvhidl.so|vendor/lib64/mediadrm/libwvdrmengine.so)
             [ "$2" = "" ] && return 0
             grep -q "libcrypto_shim.so" "${2}" || "${PATCHELF}" --add-needed "libcrypto_shim.so" "${2}"
-            ;;
-        vendor/etc/libnfc-sn100.conf)
-            sed -i "/DEFAULT_ISODEP_ROUTE/ s/0x01/0xC0/g" "${2}"
-            sed -i "/DEFAULT_SYS_CODE_ROUTE/ s/0x00/0xC0/g" "${2}"
-            sed -i "/DEFAULT_OFFHOST_ROUTE/ s/0x01/0xC0/g" "${2}"
-            sed -i "/OFFHOST_ROUTE_ESE/ s/01/C0/g" "${2}"
-            echo "DEFAULT_NFCF_ROUTE=0xC0" >> "${2}"
             ;;
         *)
             return 1
