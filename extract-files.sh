@@ -16,7 +16,7 @@ if [[ ! -d "${MY_DIR}" ]]; then MY_DIR="${PWD}"; fi
 
 ANDROID_ROOT="${MY_DIR}/../../.."
 
-export TARGET_ENABLE_CHECKELF=false
+export TARGET_ENABLE_CHECKELF=true
 
 HELPER="${ANDROID_ROOT}/tools/extract-utils/extract_utils.sh"
 if [ ! -f "${HELPER}" ]; then
@@ -28,14 +28,22 @@ source "${HELPER}"
 # Default to sanitizing the vendor folder before extraction
 CLEAN_VENDOR=true
 
+ONLY_COMMON=
 ONLY_FIRMWARE=
+ONLY_TARGET=
 KANG=
 SECTION=
 
 while [ "${#}" -gt 0 ]; do
     case "${1}" in
+        --only-common)
+            ONLY_COMMON=true
+            ;;
         --only-firmware)
             ONLY_FIRMWARE=true
+            ;;
+        --only-target)
+            ONLY_TARGET=true
             ;;
         -n | --no-cleanup)
             CLEAN_VENDOR=false
