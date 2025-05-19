@@ -17,6 +17,7 @@ $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 # EvolutionX flags
 EVO_BUILD_TYPE := Official
 WITH_GMS := true
+TARGET_INCLUDE_VIPERFX := true
 
 # Boot animation
 TARGET_SCREEN_HEIGHT := 2400
