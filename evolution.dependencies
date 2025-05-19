@@ -1,0 +1,22 @@
+[
+  {
+    "repository": "hardware_xiaomi",
+    "target_path": "hardware/xiaomi"
+  },
+  {
+    "repository": "kernel_xiaomi_veux",
+    "target_path": "kernel/xiaomi/veux"
+  },
+  {
+    "repository": "Onelots-devices-playground/vendor_xiaomi_veux",
+    "target_path": "vendor/xiaomi/veux",
+    "remote": "github-non-los",
+    "branch": "vic"
+  },
+  {
+    "repository": "takixamru/vendor_xiaomi_agc-camera.git",
+    "target_path": "vendor/xiaomi/AGC-Camera",
+    "remote": "gitlab",
+    "branch": "main"
+  }
+]
